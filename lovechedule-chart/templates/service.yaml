@@ -1,0 +1,61 @@
+{{- range .Values.services }}
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: "{{ $.Values.namespace }}"
+  name: "{{ .name }}"
+  {{- if .annotations }}
+  annotations:
+    {{- range $key, $value := .annotations }}
+    {{ $key }}: "{{ $value }}"
+    {{- end }}
+  {{- end }}
+spec:
+  type: "{{ .type }}"
+  selector:
+    app: "{{ .selector.app }}"
+    group: "{{ .selector.group }}"
+  ports:
+    - name: "{{ .name }}"
+      port: {{ .ports.port }}
+      targetPort: {{ .ports.targetPort }}
+      {{- if eq .type "NodePort" }}
+      nodePort: {{ .ports.nodePort }}
+      {{- end }}
+{{- end }}
+---
+{{- if .Values.redis.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: "{{ $.Values.namespace }}"
+  name: "redis"
+  labels:
+    app: "redis"
+spec:
+  selector:
+    app: "redis"
+  ports:
+    - protocol: TCP
+      port: {{ .Values.redis.servicePort }}
+      targetPort: {{ .Values.redis.containerPort }}
+  type: ClusterIP
+{{- end }}
+---
+{{- if .Values.mongodb.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: "{{ $.Values.namespace }}"
+  name: "mongodb"
+  labels:
+    app: "mongodb"
+spec:
+  selector:
+    app: "mongodb"
+  ports:
+    - protocol: TCP
+      port: {{ .Values.mongodb.servicePort }}
+      targetPort: {{ .Values.mongodb.containerPort }}
+  type: ClusterIP
+{{- end }}

@@ -1,0 +1,139 @@
+{{- range .Values.deployments }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: "{{ $.Values.namespace }}"
+  name: "{{ .name }}"
+  labels:
+    app: "{{ .labels.app }}"
+    group: "{{ .labels.group }}"
+spec:
+  replicas: {{ .replicas }}
+  selector:
+    matchLabels:
+      app: "{{ .labels.app }}"
+      group: "{{ .labels.group }}"
+  template:
+    metadata:
+      labels:
+        app: "{{ .labels.app }}"
+        group: "{{ .labels.group }}"
+    spec:
+      imagePullSecrets:
+        - name: regcred
+      securityContext:
+        {{- toYaml $.Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .container.name }}
+          securityContext:
+            {{- toYaml $.Values.securityContext | nindent 12 }}
+          image: "{{ .container.image }}:{{ .container.tag | default $.Chart.AppVersion }}"
+          imagePullPolicy: {{ .imagePullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .container.ports.port }}
+              protocol: TCP
+          env:
+            {{- range .env }}
+            - name: {{ .name }}
+              value: {{ .value | quote }}
+            {{- end }}
+          livenessProbe:
+            {{- toYaml $.Values.livenessProbe | nindent 12 }}
+          readinessProbe:
+            {{- toYaml $.Values.readinessProbe | nindent 12 }}
+          resources:
+            {{- toYaml $.Values.resources | nindent 12 }}
+          {{- with $.Values.volumeMounts }}
+          volumeMounts:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+      {{- with $.Values.volumes }}
+      volumes:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with $.Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with $.Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with $.Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+{{- end }}
+---
+{{- if .Values.redis.enabled }}
+apiVersion: v1
+kind: Pod
+metadata:
+  namespace: "{{ $.Values.namespace }}"
+  name: redis
+  labels:
+    app: redis
+spec:
+  containers:
+    - name: redis
+      image: redis:latest
+      command:
+        - redis-server
+        - "/redis-master/redis.conf"
+      env:
+        - name: MASTER
+          value: "true"
+      ports:
+        - containerPort: 6379
+          hostPort: 6379
+          name: redis
+      volumeMounts:
+        - mountPath: /redis-master-data
+          name: data
+        - mountPath: /redis-master
+          name: config
+  volumes:
+    - name: data
+      emptyDir: {}
+    - name: config
+      configMap:
+        name: redis-config
+        items:
+          - key: redis-config
+            path: redis.conf
+{{- end }}
+---
+{{- if .Values.mongodb.enabled }}
+apiVersion: v1
+kind: Pod
+metadata:
+  namespace: "{{ $.Values.namespace }}"
+  name: mongodb
+  labels:
+    app: mongodb
+spec:
+  containers:
+    - name: mongodb
+      image: mongo:latest
+      ports:
+        - containerPort: 27017
+          name: mongodb
+      volumeMounts:
+        - mountPath: /data/db
+          name: mongodb-data
+      env:
+        - name: MONGO_INITDB_ROOT_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: mongodb-credentials
+              key: mongo-root-username
+        - name: MONGO_INITDB_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mongodb-credentials
+              key: mongo-root-password
+  volumes:
+    - name: mongodb-data
+      emptyDir: {}
+{{- end }}

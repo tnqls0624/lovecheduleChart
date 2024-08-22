@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  namespace: lovechedule
+  name: redis-config
+data:
+  redis-config: |
+    maxmemory 20mb
+    maxmemory-policy allkeys-lru

@@ -1,0 +1,112 @@
+namespace: lovechedule
+replicaCount: 1
+
+serviceAccount:
+  name: default
+
+deployments:
+  - name: app
+    replicas: 2
+    labels:
+      app: "app"
+      group: "lovechedule"
+    #    imagePullPolicy: Never
+    imagePullSecrets:
+      - name: regcred
+    container:
+      name: app
+      image: dktnqls0624/project
+      tag: 1.0.0
+      ports:
+        name: http-internal
+        port: 3000
+    env:
+      - name: MONGO_URL
+        value: "mongodb://root:1234@mongodb.lovechedule.svc.cluster.local:27017/lovechedule?authSource=admin"
+      - name: WEATHER_API_KEY
+        value: "ec379cdcda47660851b8bd47f8432f8b"
+      - name: JWT_SECRET
+        value: "lovecheduleProject"
+      - name: REDIS_PORT
+        value: "6379"
+      - name: REDIS_HOST
+        value: "redis.lovechedule.svc.cluster.local"
+      - name: REDIS_EXPIRED_AT
+        value: "0"
+      - name: JWT_ACCESS_TOKEN_EXPIRATION_TIME
+        value: "365d"
+      - name: JWT_ACCESS_TOKEN_SECRET
+        value: "lovecheduleJwtSecret"
+
+redis:
+  enabled: true
+  image: redis:6.2.5
+  containerPort: 6379
+  servicePort: 6379
+
+mongodb:
+  enabled: true
+  auth:
+    rootUsername: "root"
+    rootPassword: "1234"
+  containerPort: 27017
+  servicePort: 27017
+
+podAnnotations: {}
+podLabels: {}
+
+podSecurityContext: {}
+securityContext: {}
+
+services:
+  - name: app
+    annotations:
+      healthcheckPath: "/"
+    type: "NodePort"
+    selector:
+      app: "app"
+      group: "lovechedule"
+    ports:
+      port: 3000
+      targetPort: 3000
+      nodePort: 32080
+
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+  hosts:
+    - host: chart-example.local
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls: []
+
+resources: {}
+
+livenessProbe:
+  httpGet:
+    path: /
+    port: 3000
+  initialDelaySeconds: 60
+  periodSeconds: 10
+  timeoutSeconds: 5
+readinessProbe:
+  httpGet:
+    path: /
+    port: 3000
+  initialDelaySeconds: 60
+  periodSeconds: 10
+  timeoutSeconds: 5
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+
+volumes: []
+volumeMounts: []
+nodeSelector: {}
+tolerations: []
+affinity: {}
