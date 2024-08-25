@@ -74,6 +74,7 @@ metadata:
   name: redis
   labels:
     app: redis
+    group: "lovechedule"
 spec:
   containers:
     - name: redis
@@ -112,6 +113,7 @@ metadata:
   name: mongodb
   labels:
     app: mongodb
+    group: "lovechedule"
 spec:
   containers:
     - name: mongodb
@@ -121,7 +123,9 @@ spec:
           name: mongodb
       volumeMounts:
         - mountPath: /data/db
-          name: mongodb-data
+          name: mongodb-storage
+        - mountPath: /docker-entrypoint-initdb.d
+          name: mongodb-init-script
       env:
         - name: MONGO_INITDB_ROOT_USERNAME
           valueFrom:
@@ -134,6 +138,13 @@ spec:
               name: mongodb-credentials
               key: mongo-root-password
   volumes:
-    - name: mongodb-data
-      emptyDir: {}
+    - name: mongodb-storage
+      persistentVolumeClaim:
+        claimName: mongodb-pvc
+    - name: mongodb-init-script
+      configMap:
+        name: mongodb-init-script
+        items:
+          - key: init-user.sh
+            path: init-user.sh
 {{- end }}

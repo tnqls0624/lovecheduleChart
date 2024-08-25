@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  namespace: lovechedule
+  name: mongodb-init-script
+data:
+  init-user.sh: |
+    #!/bin/bash
+    echo "Starting MongoDB user creation script"
+    mongosh -u "root" -p "1234" <<EOF
+    use admin
+    db.createUser({
+      user: "lovechedule",
+      pwd: "soobeen0624",
+      roles: [{ role: "readWrite", db: "lovechedule" }],
+      mechanisms: ["SCRAM-SHA-1", "SCRAM-SHA-256"]
+    })
+    use lovechedule
+    db.createCollection("test")
+    EOF
+    echo "MongoDB user creation script completed"

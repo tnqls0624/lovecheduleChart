@@ -16,13 +16,13 @@ deployments:
     container:
       name: app
       image: dktnqls0624/project
-      tag: 1.0.0
+      tag: 0.0.2
       ports:
         name: http-internal
         port: 3000
     env:
       - name: MONGO_URL
-        value: "mongodb://root:1234@mongodb.lovechedule.svc.cluster.local:27017/lovechedule?authSource=admin"
+        value: "mongodb://lovechedule:soobeen0624@mongodb.lovechedule.svc.cluster.local:27017/lovechedule?authSource=admin&readPreference=primary"
       - name: WEATHER_API_KEY
         value: "ec379cdcda47660851b8bd47f8432f8b"
       - name: JWT_SECRET
@@ -40,7 +40,6 @@ deployments:
 
 redis:
   enabled: true
-  image: redis:6.2.5
   containerPort: 6379
   servicePort: 6379
 
