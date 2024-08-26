@@ -60,26 +60,32 @@ securityContext: {}
 services:
   - name: app
     annotations:
-      healthcheckPath: "/"
-    type: "NodePort"
+      healthcheckPath: /
+      alb.ingress.kubernetes.io/healthcheck-path: /
+    type: NodePort
     selector:
       app: "app"
       group: "lovechedule"
     ports:
-      port: 3000
+      port: 32080
       targetPort: 3000
-      nodePort: 32080
+#      nodePort: 32080
 
 ingress:
-  enabled: false
-  className: ""
-  annotations: {}
+  enabled: true
+  className: "nginx"  # or alb or any other appropriate class
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
   hosts:
-    - host: chart-example.local
+    - host: lovechedule.com
       paths:
-        - path: /
+        - path: /*
           pathType: ImplementationSpecific
-  tls: []
+  tls:
+    - hosts:
+        - lovechedule.com
+      secretName: lovechedule-tls
 
 resources: {}
 
