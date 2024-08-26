@@ -80,7 +80,7 @@ ingress:
   hosts:
     - host: lovechedule.com
       paths:
-        - path: /*
+        - path: /
           pathType: ImplementationSpecific
   tls:
     - hosts:
