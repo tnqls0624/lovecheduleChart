@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: alb-ingress-controller
+  name: alb-ingress-controller
+  namespace: kube-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: alb-ingress-controller
+  template:
+    metadata:
+      labels:
+        app: alb-ingress-controller
+    spec:
+      serviceAccountName: alb-ingress-controller
+      containers:
+        - name: alb-ingress-controller
+          image: docker.io/amazon/aws-alb-ingress-controller:v2.2.0
+          args:
+            - --ingress-class=alb
+            - --cluster-name=lovechedule-cluster
+            - --aws-vpc-id=vpc-9328a1f8
+            - --aws-region=ap-northeast-2
