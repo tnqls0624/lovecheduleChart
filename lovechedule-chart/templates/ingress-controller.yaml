@@ -24,3 +24,6 @@ spec:
             - --cluster-name=lovechedule-cluster
             - --aws-vpc-id=vpc-9328a1f8
             - --aws-region=ap-northeast-2
+            - --webhook-cert-namespace=kube-system
+            - --webhook-cert-secret=aws-load-balancer-webhook-tls
+            - --disable-webhook
