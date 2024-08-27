@@ -18,7 +18,7 @@ spec:
       serviceAccountName: alb-ingress-controller
       containers:
         - name: alb-ingress-controller
-          image: docker.io/amazon/aws-alb-ingress-controller:v2.2.0
+          image: docker.io/amazon/aws-alb-ingress-controller:v2.4.2
           args:
             - --ingress-class=alb
             - --cluster-name=lovechedule-cluster
