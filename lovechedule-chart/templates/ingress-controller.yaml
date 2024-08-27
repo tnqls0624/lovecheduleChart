@@ -24,4 +24,3 @@ spec:
             - --cluster-name=lovechedule-cluster
             - --aws-vpc-id=vpc-9328a1f8
             - --aws-region=ap-northeast-2
-            - --disable-webhook
