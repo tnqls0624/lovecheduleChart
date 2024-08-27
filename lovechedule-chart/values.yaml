@@ -81,13 +81,13 @@ ingress:
     alb.ingress.kubernetes.io/target-type: ip
     alb.ingress.kubernetes.io/load-balancer-arn: arn:aws:elasticloadbalancing:ap-northeast-2:327066177061:loadbalancer/app/lc-lb/a1b15c8679030a60
   hosts:
-    - host: lovechedule.com
+    - host: api.lovechedule.com
       paths:
         - path: /
           pathType: ImplementationSpecific
   tls:
     - hosts:
-        - lovechedule.com
+        - api.lovechedule.com
       secretName: lovechedule-tls
 
 resources: {}
