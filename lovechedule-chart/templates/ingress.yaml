@@ -10,7 +10,7 @@ metadata:
   annotations:
     alb.ingress.kubernetes.io/scheme: internet-facing
     alb.ingress.kubernetes.io/target-type: ip
-    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}]'
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 3000}]'
     alb.ingress.kubernetes.io/subnets: 'subnet-05c77d6e,subnet-872f58fc'
 spec:
   ingressClassName: {{ .Values.ingress.className }}
