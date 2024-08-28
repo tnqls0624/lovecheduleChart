@@ -8,11 +8,9 @@ metadata:
     app: lovechedule-alb-ingress-public
     group: lovechedule
   annotations:
-    kubernetes.io/ingress.class: alb
     alb.ingress.kubernetes.io/scheme: internet-facing
     alb.ingress.kubernetes.io/target-type: ip
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS": 443}]'
-    alb.ingress.kubernetes.io/load-balancer-arn: arn:aws:elasticloadbalancing:ap-northeast-2:327066177061:loadbalancer/app/lc-lb/a1b15c8679030a60
 spec:
   ingressClassName: {{ .Values.ingress.className }}
   rules:
