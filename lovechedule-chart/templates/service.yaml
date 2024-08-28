@@ -4,12 +4,8 @@ kind: Service
 metadata:
   namespace: "{{ $.Values.namespace }}"
   name: "{{ .name }}"
-  {{- if .annotations }}
   annotations:
-    {{- range $key, $value := .annotations }}
-    {{ $key }}: "{{ $value }}"
-    {{- end }}
-  {{- end }}
+    alb.ingress.kubernetes.io/healthcheck-path:  /
 spec:
   type: "{{ .type }}"
   selector:
@@ -19,6 +15,7 @@ spec:
     - name: "{{ .name }}"
       port: {{ .ports.port }}
       targetPort: {{ .ports.targetPort }}
+      protocol: TCP
 {{- end }}
 ---
 {{- if .Values.redis.enabled }}
