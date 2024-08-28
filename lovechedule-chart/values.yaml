@@ -61,7 +61,6 @@ services:
   - name: app
     annotations:
       healthcheckPath: /
-      alb.ingress.kubernetes.io/healthcheck-path: /
     type: NodePort
     selector:
       app: "app"
