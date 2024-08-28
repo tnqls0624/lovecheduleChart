@@ -19,9 +19,9 @@ spec:
     - name: "{{ .name }}"
       port: {{ .ports.port }}
       targetPort: {{ .ports.targetPort }}
-{{/*      {{- if eq .type "NodePort" }}*/}}
-{{/*      nodePort: {{ .ports.nodePort }}*/}}
-{{/*      {{- end }}*/}}
+      {{- if eq .type "NodePort" }}
+      nodePort: {{ .ports.nodePort }}
+      {{- end }}
 {{- end }}
 ---
 {{- if .Values.redis.enabled }}

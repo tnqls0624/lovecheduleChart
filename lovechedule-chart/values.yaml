@@ -61,14 +61,14 @@ services:
   - name: app
     annotations:
       healthcheckPath: /
-    type: ClusterIP
+    type: NodePort
     selector:
       app: "app"
       group: "lovechedule"
     ports:
       port: 80
       targetPort: 3000
-#      nodePort: 32080
+      nodePort: 32080
 
 ingress:
   enabled: true
