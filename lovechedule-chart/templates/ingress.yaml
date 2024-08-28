@@ -26,7 +26,7 @@ spec:
               service:
                 name: app
                 port:
-                  number: 80
+                  number: 3000
           {{- end }}
     {{- end }}
 {{/*  {{- if .Values.ingress.tls }}*/}}
