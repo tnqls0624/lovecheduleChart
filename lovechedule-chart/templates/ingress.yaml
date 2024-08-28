@@ -9,7 +9,7 @@ metadata:
     group: lovechedule
   annotations:
     alb.ingress.kubernetes.io/scheme: internet-facing
-    alb.ingress.kubernetes.io/target-type: instance
+    alb.ingress.kubernetes.io/target-type: ip
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}]'
     alb.ingress.kubernetes.io/healthcheck-path:  /
     alb.ingress.kubernetes.io/subnets: 'subnet-05c77d6e,subnet-872f58fc'
