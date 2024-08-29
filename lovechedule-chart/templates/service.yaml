@@ -9,6 +9,7 @@ metadata:
 spec:
   type: "{{ .type }}"
   selector:
+    app.kubernetes.io/name: "{{ .selector.app }}"
     app: "{{ .selector.app }}"
     group: "{{ .selector.group }}"
   ports:
