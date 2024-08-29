@@ -12,7 +12,7 @@ metadata:
     alb.ingress.kubernetes.io/target-type: ip
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}]'
     alb.ingress.kubernetes.io/healthcheck-path:  /
-    alb.ingress.kubernetes.io/subnets: 'subnet-05c77d6e,subnet-872f58fc'
+    alb.ingress.kubernetes.io/subnets: 'subnet-05c77d6e,subnet-872f58fc,subnet-c1947a8e,subnet-2d758d72'
 spec:
   ingressClassName: {{ .Values.ingress.className }}
   rules:
