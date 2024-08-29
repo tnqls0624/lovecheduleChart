@@ -66,9 +66,9 @@ services:
       app: "app"
       group: "lovechedule"
     ports:
-      port: 32080
+      port: 12080
       targetPort: 3000
-#      nodePort: 32080
+      nodePort: 32080
 
 ingress:
   enabled: true

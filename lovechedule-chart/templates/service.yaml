@@ -15,6 +15,7 @@ spec:
     - name: "{{ .name }}"
       port: {{ .ports.port }}
       targetPort: {{ .ports.targetPort }}
+      nodePort: : {{.ports.nodePort}}}
       protocol: TCP
 {{- end }}
 ---
